@@ -1,0 +1,27 @@
+#content {
+    margin-top: 16px;
+}
+
+#test-button {
+    display: none;
+}
+
+label {
+    font-size: small;
+    width: 30%;
+    align-items: center;
+    display: flex;
+    margin-right: 12px;
+}
+
+h6 {
+    margin-bottom: 16px;
+}
+
+.login__field {
+    display: flex;
+}
+
+.w100 {
+    width:100%;
+}

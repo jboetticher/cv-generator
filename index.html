@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Google Docs API Quickstart</title>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="assets/main.css">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="screen">
+      <div class="screen__content">
+        <!--Add buttons to initiate auth sequence and sign out-->
+        <form class="login" style="margin: 32px">
+          <section id="edit-form">
+            <h4>
+              Jeremy's Solution to Job Search Hell
+            </h4>
+            <h6>(In Vanilla HTML)</h6>
+            <div class="w100">
+              <div class="login__field">
+                <label for="company-name">Company Name</label>
+                <input id="company-name" class="login__input" placeholder="Chad Inc." />
+              </div>
+            </div>
+            <div class="w100">
+              <div class="login__field">
+                <label for="position-name">Position Name</label>
+                <input id="position-name" class="login__input" placeholder="Junior Chad" />
+              </div>
+            </div>
+            <button class="login__submit" id="submit-edits" style="display: none;">Submit Edits</button>
+            <button class="login__submit" id="test-button">Test Button</button>
+            <button class="login__submit" id="authorize_button" style="display: none;">Authorize</button>
+            <button class="login__submit" id="signout_button" style="display: none;">Sign Out</button>
+          </section>
+
+          <section id="waiting-section" style="margin: 32px; display: none">
+            <p id="progress-text">Waiting...</p>
+          </section>
+
+          <pre id="content"></pre>
+        </form>
+      </div>
+      <div class="screen__background">
+        <span class="screen__background__shape screen__background__shape1"></span>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/quickstart.js"></script>
+  <script async="" defer="" onload="this.onload=function(){};handleClientLoad()"
+    onreadystatechange="if (this.readyState === 'complete') this.onload()"
+    src="https://apis.google.com/js/api.js"></script>
+</body>
+
+</html>
