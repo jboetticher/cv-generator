@@ -1,5 +1,3 @@
-import secret from "secret.json";
-
 // Client ID and API key from the Developer Console
 const CLIENT_ID = secret.CLIENT_ID;
 const API_KEY = secret.API_KEY;
