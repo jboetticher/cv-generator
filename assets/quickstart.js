@@ -11,11 +11,26 @@ const DISCOVERY_DOCS = [
 // Authorization scopes required by the API; multiple scopes can be
 // included, separated by spaces.
 const SCOPES = "https://www.googleapis.com/auth/documents https://www.googleapis.com/auth/drive";
-
 const COVER_LETTER_ID = '1XZW1oxj9bg1_Fdx5lVY_dcL32vejfpeKZBCJrOVck_4';
 const RESUME_ID = '1DgCdckTxpLvB90F-_l1ck5V1F3JuihCqeXl_WplCx-U';
 const TEST_FILE_ID = '1ZWLWWJ2jeyUO83BgX4R6Sun_0kANVoCDTAa8k8oRYfM';
+var curDoc;
 
+// Firebase
+const firebase = require("firebase");
+require("firebase/firestore");
+const firebaseConfig = {
+  apiKey: "AIzaSyABfbmVqshenxAFuNxub0EDJhE7Z-5v6oE",
+  authDomain: "cv-generator-336021.firebaseapp.com",
+  projectId: "cv-generator-336021",
+  storageBucket: "cv-generator-336021.appspot.com",
+  messagingSenderId: "469133785919",
+  appId: "1:469133785919:web:b2b2b526acb7951119718a"
+};
+const fbApp = firebase.initializeApp(config);
+const db = firebase.firestore(fbApp);
+
+// DOM
 var authorizeButton = document.getElementById('authorize_button');
 var signoutButton = document.getElementById('signout_button');
 var makeEditsButton = document.getElementById('submit-edits');
@@ -23,12 +38,8 @@ var testButton = document.getElementById('test-button');
 var editForm = document.getElementById('edit-form');
 var waitingSection = document.getElementById('waiting-section');
 var progressText = document.getElementById('progress-text');
-
 var companyName = document.getElementById('company-name');
 var positionName = document.getElementById('position-name');
-
-var curDoc;
-
 
 
 /**
@@ -156,6 +167,19 @@ async function handleMakeEdits(e) {
   editForm.style.display = 'none';
   waitingSection.style.display = 'block';
 
+  // 0: generate new firebase id
+  let newFbDoc = await db.collection("clicks").doc().set({
+    company: companyName.value,
+    position: positionName.value,
+    version: 1,
+    click_dictater: 0,
+    click_hackathon: 0,
+    click_linkedin: 0,
+    click_portfolio: 0,
+    cl_version: 1,
+    resume_version: 1
+  });
+
   // 1: duplicate
   setProgress("Duplicating base cover letter...");
   let copyRes = await gapi.client.drive.files.copy({
@@ -209,4 +233,8 @@ const delay = ms => new Promise(res => setTimeout(res, ms));
 
 function handleTestButton() {
   console.log(gapi.client);
+}
+
+function replaceLinks(doc, id) {
+  
 }
