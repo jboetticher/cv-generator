@@ -17,8 +17,6 @@ const TEST_FILE_ID = '1ZWLWWJ2jeyUO83BgX4R6Sun_0kANVoCDTAa8k8oRYfM';
 var curDoc;
 
 // Firebase
-const firebase = require("firebase");
-require("firebase/firestore");
 const firebaseConfig = {
   apiKey: "AIzaSyABfbmVqshenxAFuNxub0EDJhE7Z-5v6oE",
   authDomain: "cv-generator-336021.firebaseapp.com",
@@ -27,7 +25,7 @@ const firebaseConfig = {
   messagingSenderId: "469133785919",
   appId: "1:469133785919:web:b2b2b526acb7951119718a"
 };
-const fbApp = firebase.initializeApp(config);
+const fbApp = firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore(fbApp);
 
 // DOM
@@ -132,14 +130,15 @@ function printDocTitle() {
 /**
  * Generates a replace json for the replace request
  */
-function generateReplaceRequests() {
+function generateReplaceRequests(doc, fbId) {
   let json = [];
-  let valuePairs = [
+  let replaceAllPairs = [
     ["COMPANY_NAME", companyName.value],
     ["POSITION_NAME", positionName.value],
   ];
 
-  valuePairs.forEach(x => {
+  // Replace normal text
+  replaceAllPairs.forEach(x => {
     json.push({
       replaceAllText: {
         replaceText: x[1],
@@ -151,6 +150,35 @@ function generateReplaceRequests() {
     })
   });
 
+  // Replace links
+  doc.body.content.forEach(x => {
+    if (x.paragraph != null) {
+      x.paragraph.elements.forEach(element => {
+        if (element.textRun.textStyle.link != null) {
+          // add link update
+          json.push({
+            updateTextStyle: {
+              textStyle: {
+                link: {
+                  url: `https://${secret.DOMAIN}?id=${fbId}&link=${element.textRun.textStyle.link.url}`
+                }
+              },
+              range: {
+                startIndex: element.startIndex,
+                endIndex: element.endIndex
+              },
+              fields: "link"
+            }
+          });
+        }
+      });
+    }
+    else if (x.table != null) {
+      // recursive shit. Replace doc.body with recursive shit
+    }
+  });
+
+  console.log(json);
   return json;
 }
 
@@ -166,19 +194,6 @@ async function handleMakeEdits(e) {
 
   editForm.style.display = 'none';
   waitingSection.style.display = 'block';
-
-  // 0: generate new firebase id
-  let newFbDoc = await db.collection("clicks").doc().set({
-    company: companyName.value,
-    position: positionName.value,
-    version: 1,
-    click_dictater: 0,
-    click_hackathon: 0,
-    click_linkedin: 0,
-    click_portfolio: 0,
-    cl_version: 1,
-    resume_version: 1
-  });
 
   // 1: duplicate
   setProgress("Duplicating base cover letter...");
@@ -205,12 +220,28 @@ async function handleMakeEdits(e) {
   curDoc = copyReq.result;
   console.log("NEW DOC: ", curDoc);
 
+  // 3: generate new firebase id
+  setProgress("Generating Firebase ID...");
+  let newFbDoc = await db.collection("clicks").doc();
+  console.log(newFbDoc.id);
+  await newFbDoc.set({
+    company: companyName.value,
+    position: positionName.value,
+    version: 1,
+    click_dictater: 0,
+    click_hackathon: 0,
+    click_linkedin: 0,
+    click_portfolio: 0,
+    cl_version: 1,
+    resume_version: 1
+  });
+
   // 4: replacement
   setProgress("Replacing key text in document...");
   let replacement = await gapi.client.docs.documents.batchUpdate({
     documentId: curDoc.documentId,
     resource: {
-      requests: generateReplaceRequests(),
+      requests: generateReplaceRequests(curDoc, newFbDoc.id),
       writeControl: {
         "targetRevisionId": curDoc.revisionId
       }
@@ -233,8 +264,4 @@ const delay = ms => new Promise(res => setTimeout(res, ms));
 
 function handleTestButton() {
   console.log(gapi.client);
-}
-
-function replaceLinks(doc, id) {
-  
 }

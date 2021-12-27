@@ -25,8 +25,11 @@ const db = firebase.firestore(fbApp);
 // increment if it exists
 const knownLinks = {
     "https://www.linkedin.com/in/jeremy-boetticher": "click_linkedin",
+    "https://www.linkedin.com/in/jeremy-boetticher/": "click_linkedin",
+    "https://www.dictatergame.com": "click_dictater",
     "https://www.dictatergame.com/": "click_dictater",
-    "https://projk.net/jeremy": "click_portfolio"
+    "https://projk.net/jeremy": "click_portfolio",
+    "https://projk.net/jeremy/": "click_portfolio"
 };
 
 const link = findGetParameter("link");
@@ -37,7 +40,7 @@ const docRef = db.collection("clicks").doc(id);
 console.log(knownLinks[link], docRef);
 
 let fbUpdateObj = {};
-fbUpdateObj[knownLinks[link] ?? `click_${link}`] = increment;
+fbUpdateObj[knownLinks[link] ?? `click_other`] = increment;
 console.log(fbUpdateObj);
 docRef.update(fbUpdateObj)
     .then(function (res) {
