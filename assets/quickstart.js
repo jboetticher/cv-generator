@@ -11,7 +11,8 @@ const DISCOVERY_DOCS = [
 // Authorization scopes required by the API; multiple scopes can be
 // included, separated by spaces.
 const SCOPES = "https://www.googleapis.com/auth/documents https://www.googleapis.com/auth/drive";
-const COVER_LETTER_ID = '1XZW1oxj9bg1_Fdx5lVY_dcL32vejfpeKZBCJrOVck_4';
+const CYNICAL_CL_ID = '1XZW1oxj9bg1_Fdx5lVY_dcL32vejfpeKZBCJrOVck_4';
+const BLOCKCHAIN_CL_ID = '1Jcy-NZnoZiHtnZvZq4BrAgA858xkzlDx1IZlL-IlxXA';
 const RESUME_ID = '1DgCdckTxpLvB90F-_l1ck5V1F3JuihCqeXl_WplCx-U';
 const TEST_FILE_ID = '1ZWLWWJ2jeyUO83BgX4R6Sun_0kANVoCDTAa8k8oRYfM';
 var curDoc;
@@ -38,6 +39,7 @@ var waitingSection = document.getElementById('waiting-section');
 var progressText = document.getElementById('progress-text');
 var companyName = document.getElementById('company-name');
 var positionName = document.getElementById('position-name');
+var letterType = document.getElementById('cv-type');
 
 
 /**
@@ -195,10 +197,21 @@ async function handleMakeEdits(e) {
   editForm.style.display = 'none';
   waitingSection.style.display = 'block';
 
+  // 1: select the cover letter type
+  var typeId;
+  switch (typeId) {
+    case "blockchain":
+      typeId = BLOCKCHAIN_CL_ID;
+      break;
+    default:
+      typeId = CYNICAL_CL_ID;
+      break;
+  }
+
   // 1: duplicate
   setProgress("Duplicating base cover letter...");
   let copyRes = await gapi.client.drive.files.copy({
-    fileId: COVER_LETTER_ID,
+    fileId: typeId,
     fields: "id"
   });
   console.log("COPY: ", copyRes);
