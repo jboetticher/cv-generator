@@ -199,7 +199,7 @@ async function handleMakeEdits(e) {
 
   // 1: select the cover letter type
   var typeId;
-  switch (typeId) {
+  switch (letterType.value) {
     case "blockchain":
       typeId = BLOCKCHAIN_CL_ID;
       break;
