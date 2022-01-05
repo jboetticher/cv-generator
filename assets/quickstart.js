@@ -200,6 +200,7 @@ async function handleMakeEdits(e) {
 
   // 1: select the cover letter type
   var typeId;
+  console.log("value!!!", letterType.value);
   switch (letterType.value) {
     case "blockchain":
       typeId = BLOCKCHAIN_CL_ID;
@@ -211,6 +212,7 @@ async function handleMakeEdits(e) {
       typeId = CYNICAL_CL_ID;
       break;
   }
+  console.log("TypeID!", typeId);
 
   // 1: duplicate
   setProgress("Duplicating base cover letter...");
