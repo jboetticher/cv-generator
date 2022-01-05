@@ -13,6 +13,7 @@ const DISCOVERY_DOCS = [
 const SCOPES = "https://www.googleapis.com/auth/documents https://www.googleapis.com/auth/drive";
 const CYNICAL_CL_ID = '1XZW1oxj9bg1_Fdx5lVY_dcL32vejfpeKZBCJrOVck_4';
 const BLOCKCHAIN_CL_ID = '1Jcy-NZnoZiHtnZvZq4BrAgA858xkzlDx1IZlL-IlxXA';
+const WEB_CL_ID = '15ihpWh4Dm5tyUUafDQDJDkEl6_U8ym2xVLN4PM_YpNE';
 const RESUME_ID = '1DgCdckTxpLvB90F-_l1ck5V1F3JuihCqeXl_WplCx-U';
 const TEST_FILE_ID = '1ZWLWWJ2jeyUO83BgX4R6Sun_0kANVoCDTAa8k8oRYfM';
 var curDoc;
@@ -202,6 +203,9 @@ async function handleMakeEdits(e) {
   switch (letterType.value) {
     case "blockchain":
       typeId = BLOCKCHAIN_CL_ID;
+      break;
+    case "web":
+      typeId = WEB_CL_ID;
       break;
     default:
       typeId = CYNICAL_CL_ID;
